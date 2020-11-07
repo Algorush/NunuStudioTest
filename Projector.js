@@ -9,17 +9,17 @@ function initialize() {
   	//camera = new PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.01, 1000);
   	camera.position.set(2, 1, 2).setLength(15);	
 	
-    var video = document.createElement('video');
+    	var video = document.createElement('video');
 	var id = "video";
 	video.id = id;
 	video.crossOrigin = "anonymous";	
-    video.src = "https://threejs.org/examples/textures/sintel.ogv";
+    	video.src = "https://threejs.org/examples/textures/sintel.ogv";
 	
 	program.division.appendChild(video);
 	video = program.video;
-    video.volume = 0;
+    	video.volume = 0;
 
-    video.autoplay = true;
+    	video.autoplay = true;
 	video.style.width= "1px";
 	video.style.height = "auto";
 	video.style.position = "absolute";
@@ -27,10 +27,10 @@ function initialize() {
 	video.autoload = true;
 	video.setAttribute('playsinline', 'true');
 	video.loop = true;
-    video.muted = true;
+    	video.muted = true;
 	video.play(); 
-    var videoTex = new VideoTexture(video);
-    videoTex.needsUpdate = true;
+    	var videoTex = new VideoTexture(video);
+    	videoTex.needsUpdate = true;
 	/*var videoMaterial = program.getMaterialByName("video_material");
 	videoMaterial.emissiveMap = videoTex;
 	videoMaterial.emissive.setHex(0xFFFFFF);*/
@@ -101,63 +101,63 @@ function update() {
 }
 
 function GridBoxGeometry(geometry, independent) {
-  if (!(geometry instanceof BoxBufferGeometry)) {
-    console.log("GridBoxGeometry: the parameter 'geometry' has to be of the type BoxBufferGeometry");
-    return geometry;
-  }
-  independent = independent !== undefined ? independent : false;
+	  if (!(geometry instanceof BoxBufferGeometry)) {
+	    console.log("GridBoxGeometry: the parameter 'geometry' has to be of the type BoxBufferGeometry");
+	    return geometry;
+	  }
+	  independent = independent !== undefined ? independent : false;
 
-  let newGeometry = new BoxBufferGeometry();
-  let position = geometry.attributes.position;
-  newGeometry.attributes.position = independent === false ? position : position.clone();
+	  let newGeometry = new BoxBufferGeometry();
+	  let position = geometry.attributes.position;
+	  newGeometry.attributes.position = independent === false ? position : position.clone();
 
-  let segmentsX = geometry.parameters.widthSegments || 1;
-  let segmentsY = geometry.parameters.heightSegments || 1;
-  let segmentsZ = geometry.parameters.depthSegments || 1;
+	  let segmentsX = geometry.parameters.widthSegments || 1;
+	  let segmentsY = geometry.parameters.heightSegments || 1;
+	  let segmentsZ = geometry.parameters.depthSegments || 1;
 
-  let startIndex = 0;
-  let indexSide1 = indexSide(segmentsZ, segmentsY, startIndex);
-  startIndex += (segmentsZ + 1) * (segmentsY + 1);
-  let indexSide2 = indexSide(segmentsZ, segmentsY, startIndex);
-  startIndex += (segmentsZ + 1) * (segmentsY + 1);
-  let indexSide3 = indexSide(segmentsX, segmentsZ, startIndex);
-  startIndex += (segmentsX + 1) * (segmentsZ + 1);
-  let indexSide4 = indexSide(segmentsX, segmentsZ, startIndex);
-  startIndex += (segmentsX + 1) * (segmentsZ + 1);
-  let indexSide5 = indexSide(segmentsX, segmentsY, startIndex);
-  startIndex += (segmentsX + 1) * (segmentsY + 1);
-  let indexSide6 = indexSide(segmentsX, segmentsY, startIndex);
+	  let startIndex = 0;
+	  let indexSide1 = indexSide(segmentsZ, segmentsY, startIndex);
+	  startIndex += (segmentsZ + 1) * (segmentsY + 1);
+	  let indexSide2 = indexSide(segmentsZ, segmentsY, startIndex);
+	  startIndex += (segmentsZ + 1) * (segmentsY + 1);
+	  let indexSide3 = indexSide(segmentsX, segmentsZ, startIndex);
+	  startIndex += (segmentsX + 1) * (segmentsZ + 1);
+	  let indexSide4 = indexSide(segmentsX, segmentsZ, startIndex);
+	  startIndex += (segmentsX + 1) * (segmentsZ + 1);
+	  let indexSide5 = indexSide(segmentsX, segmentsY, startIndex);
+	  startIndex += (segmentsX + 1) * (segmentsY + 1);
+	  let indexSide6 = indexSide(segmentsX, segmentsY, startIndex);
 
-  let fullIndices = [];
-  fullIndices = fullIndices.concat(indexSide1);
-  fullIndices = fullIndices.concat(indexSide2);
-  fullIndices = fullIndices.concat(indexSide3);
-  fullIndices = fullIndices.concat(indexSide4);
-  fullIndices = fullIndices.concat(indexSide5);
-  fullIndices = fullIndices.concat(indexSide6);
+	  let fullIndices = [];
+	  fullIndices = fullIndices.concat(indexSide1);
+	  fullIndices = fullIndices.concat(indexSide2);
+	  fullIndices = fullIndices.concat(indexSide3);
+	  fullIndices = fullIndices.concat(indexSide4);
+	  fullIndices = fullIndices.concat(indexSide5);
+	  fullIndices = fullIndices.concat(indexSide6);
 
-  newGeometry.setIndex(fullIndices);
+	  newGeometry.setIndex(fullIndices);
 
-  function indexSide(x, y, shift) {
-    let indices = [];
-    for (let i = 0; i < y + 1; i++) {
-      let index11 = 0;
-      let index12 = 0;
-      for (let j = 0; j < x; j++) {
-        index11 = (x + 1) * i + j;
-        index12 = index11 + 1;
-        let index21 = index11;
-        let index22 = index11 + (x + 1);
-        indices.push(shift + index11, shift + index12);
-        if (index22 < ((x + 1) * (y + 1) - 1)) {
-          indices.push(shift + index21, shift + index22);
-        }
-      }
-      if ((index12 + x + 1) <= ((x + 1) * (y + 1) - 1)) {
-        indices.push(shift + index12, shift + index12 + x + 1);
-      }
-    }
-    return indices;
-  }
-  return newGeometry;
+	  function indexSide(x, y, shift) {
+	    let indices = [];
+	    for (let i = 0; i < y + 1; i++) {
+	      let index11 = 0;
+	      let index12 = 0;
+	      for (let j = 0; j < x; j++) {
+		index11 = (x + 1) * i + j;
+		index12 = index11 + 1;
+		let index21 = index11;
+		let index22 = index11 + (x + 1);
+		indices.push(shift + index11, shift + index12);
+		if (index22 < ((x + 1) * (y + 1) - 1)) {
+		  indices.push(shift + index21, shift + index22);
+		}
+	      }
+	      if ((index12 + x + 1) <= ((x + 1) * (y + 1) - 1)) {
+		indices.push(shift + index12, shift + index12 + x + 1);
+	      }
+	    }
+	    return indices;
+	  }
+	  return newGeometry;
 }
